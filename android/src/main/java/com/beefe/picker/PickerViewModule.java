@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -70,14 +71,14 @@ import static android.graphics.Color.argb;
  * 3. Added pickerFontSize
  * 4. Used LifecycleEventListener replace Application.ActivityLifecycleCallbacks
  * 5. Fixed other bug
- *
+ * <p>
  * Edited by heng on 2017/01/17
  * 1. Added select(ReadableArray array, Callback callback)
  * 2. Optimization code
  */
 
 public class PickerViewModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
-    
+
     private static final String FONTS = "fonts/";
     private static final String OTF = ".otf";
     private static final String TTF = ".ttf";
@@ -136,6 +137,7 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
 
     private PickerViewLinkage pickerViewLinkage;
     private PickerViewAlone pickerViewAlone;
+
 
     public PickerViewModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -209,7 +211,14 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
                             returnData = pickerViewLinkage.getSelectedData();
                             break;
                     }
-                    commonEvent(EVENT_KEY_CONFIRM);
+
+                    // ======= fix confirm click市，还没回调新选择数据的bug
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            commonEvent(EVENT_KEY_CONFIRM);
+                        }
+                    }, 500);
                     hide();
                 }
             });
@@ -250,7 +259,7 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
                 }
             });
 
-            if(options.hasKey(PICKER_TEXT_ELLIPSIS_LEN)){
+            if (options.hasKey(PICKER_TEXT_ELLIPSIS_LEN)) {
                 pickerTextEllipsisLen = options.getInt(PICKER_TEXT_ELLIPSIS_LEN);
             }
 
@@ -395,10 +404,10 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
                 if (window != null) {
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         window.setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-                    }else{
+                    } else {
                         if (MIUIUtils.isMIUI()) {
                             layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION;
-                        }else {
+                        } else {
                             //layoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
                         }
                     }
@@ -408,7 +417,7 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
                     layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
                     layoutParams.height = height;
                     layoutParams.gravity = Gravity.BOTTOM;
-                    window.setAttributes(layoutParams);   
+                    window.setAttributes(layoutParams);
                 }
             } else {
                 dialog.dismiss();
