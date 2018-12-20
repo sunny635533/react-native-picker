@@ -13,7 +13,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.os.Build;
 
@@ -154,11 +154,11 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
         Activity activity = getCurrentActivity();
         if (activity != null && options.hasKey(PICKER_DATA)) {
             View view = activity.getLayoutInflater().inflate(R.layout.picker_view, null);
-            RelativeLayout barLayout = (RelativeLayout) view.findViewById(R.id.barLayout);
+            LinearLayout barLayout = (LinearLayout) view.findViewById(R.id.barLayout);
             TextView cancelTV = (TextView) view.findViewById(R.id.cancel);
             TextView titleTV = (TextView) view.findViewById(R.id.title);
             TextView confirmTV = (TextView) view.findViewById(R.id.confirm);
-            RelativeLayout pickerLayout = (RelativeLayout) view.findViewById(R.id.pickerLayout);
+            LinearLayout pickerLayout = (LinearLayout) view.findViewById(R.id.pickerLayout);
             pickerViewLinkage = (PickerViewLinkage) view.findViewById(R.id.pickerViewLinkage);
             pickerViewAlone = (PickerViewAlone) view.findViewById(R.id.pickerViewAlone);
 
@@ -172,22 +172,22 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
             } else {
                 barViewHeight = (int) (activity.getResources().getDisplayMetrics().density * 40);
             }
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
                     barViewHeight);
-            barLayout.setLayoutParams(params);
+//            barLayout.setLayoutParams(params);
 
             if (options.hasKey(PICKER_TOOL_BAR_BG)) {
                 ReadableArray array = options.getArray(PICKER_TOOL_BAR_BG);
                 int[] colors = getColor(array);
-                barLayout.setBackgroundColor(argb(colors[3], colors[0], colors[1], colors[2]));
+//                barLayout.setBackgroundColor(argb(colors[3], colors[0], colors[1], colors[2]));
             }
 
             if (options.hasKey(PICKER_TOOL_BAR_TEXT_SIZE)) {
                 int toolBarTextSize = options.getInt(PICKER_TOOL_BAR_TEXT_SIZE);
-                cancelTV.setTextSize(toolBarTextSize);
-                titleTV.setTextSize(toolBarTextSize);
-                confirmTV.setTextSize(toolBarTextSize);
+//                cancelTV.setTextSize(toolBarTextSize);
+//                titleTV.setTextSize(toolBarTextSize);
+//                confirmTV.setTextSize(toolBarTextSize);
             }
 
             if (options.hasKey(PICKER_CONFIRM_BTN_TEXT)) {
@@ -415,8 +415,7 @@ public class PickerViewModule extends ReactContextBaseJavaModule implements Life
                     layoutParams.format = PixelFormat.TRANSPARENT;
                     layoutParams.windowAnimations = R.style.PickerAnim;
                     layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-                    layoutParams.height = height;
-                    layoutParams.gravity = Gravity.BOTTOM;
+                    layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
                     window.setAttributes(layoutParams);
                 }
             } else {
